@@ -11,8 +11,8 @@ export const THEME_CONFIG = {
   initialColorMode: THEME_INITIAL_COLOR,
 }
 
-// export const SOCIAL_TWITTER = 'wslyvh'
-// export const SOCIAL_GITHUB = 'wslyvh/nexth'
+export const SOCIAL_TWITTER = '@razberrychai'
+export const SOCIAL_GITHUB = '@hellorashid'
 
 export const ETH_CHAINS = [mainnet, goerli, sepolia, polygon, optimism, arbitrum]
 

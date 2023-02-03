@@ -85,6 +85,7 @@ const NotesContainer = ({ address }: { address: string }) => {
   const [content, setContent] = useState('')
   const [updating, setUpdating] = useState(false)
   const [notes, setNotes] = useState([])
+  const [editMode, setEditMode] = useState(false)
 
 
   const fetchAllNotes = async () => {
@@ -133,10 +134,17 @@ const NotesContainer = ({ address }: { address: string }) => {
   }
 
   const handleNew = () => {
+    setEditMode(true)
     setTitle('Untitled')
     setContent('write anything...')
   }
 
+  const handleSet = (title: string, content: string) => {
+    setEditMode(false)
+    console.log("settting", title)
+    setTitle(title)
+    setContent(content)
+  }
 
   // useEffect(() => {
   //   setUpdating(true)
@@ -156,7 +164,7 @@ const NotesContainer = ({ address }: { address: string }) => {
         </div>
 
         {notes.map((note: any) => {
-          return (<CardItem key={note.id} title={note.title} content={note.content} />)
+          return (<CardItem key={note.id} title={note.title} content={note.content} clicked={handleSet} />)
         })}
       </div>
 
@@ -164,21 +172,31 @@ const NotesContainer = ({ address }: { address: string }) => {
         <Container pt={2} >
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignContent: 'cneter' }}>
-            <Heading as="h2" mb="2">
-              <ChakraEditable defaultValue={title} onChange={(e) => {
-                setTitle(e)
-                console.log(e)
-              }}>
-                <EditablePreview />
-                <EditableInput />
-              </ChakraEditable>
 
-            </Heading>
+            {editMode ?
+
+              <Heading as="h2" mb="2">
+                <ChakraEditable defaultValue={title} onChange={(e) => {
+                  setTitle(e)
+                  console.log(e)
+                }}>
+                  <EditablePreview />
+                  <EditableInput />
+                </ChakraEditable>
+              </Heading>
+              :
+              <Heading as="h2" mb="2">{title}</Heading>
+            }
 
             <Button isLoading={updating} onClick={() => handleSave()}>Save</Button>
           </div>
 
-          <TextBox />
+
+          {!editMode ?
+            <p>{content}</p>
+            :
+            <TextBox />
+          }
 
         </Container>
       </Flex>
@@ -186,9 +204,12 @@ const NotesContainer = ({ address }: { address: string }) => {
   )
 }
 
-const CardItem = ({ title, content }: { title: string, content: string }) => {
+const CardItem = ({ title, content, clicked }: { title: string, content: string, clicked: any }) => {
   return (
-    <Box bg="rgb(12, 12, 12, 0.0)" m="2" py="5" rounded={"md"} shadow="sm">
+    <Box bg="rgb(12, 12, 12, 0.0)" m="2" py="5" rounded={"md"} shadow="sm" onClick={() => {
+      console.log('clicked', title, content)
+      clicked(title, content)
+    }}>
       <Container>
 
         <Heading size={"md"} color="#CCCCCC">

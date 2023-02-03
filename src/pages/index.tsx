@@ -90,6 +90,9 @@ const NotesContainer = ({ address }: { address: string }) => {
   const [notes, setNotes] = useState([])
   const [editMode, setEditMode] = useState(false)
 
+  const [editor] = useState(() => withReact(createEditor()))
+
+
 
   const fetchAllNotes = async () => {
     setUpdating(true)
@@ -134,6 +137,8 @@ const NotesContainer = ({ address }: { address: string }) => {
 
     console.log(resp)
 
+    fetchAllNotes()
+
   }
 
   const handleNew = () => {
@@ -149,13 +154,38 @@ const NotesContainer = ({ address }: { address: string }) => {
     setContent(content)
   }
 
-  // useEffect(() => {
-  //   setUpdating(true)
-  //   setTimeout(() => {
-  //     setUpdating(false)
-  //   }
-  //     , 3000)
-  // }, [title])
+  const TextBox = () => {
+
+    return (
+      //@ts-ignore
+      <Slate editor={editor} value={initialValue}
+        onChange={value => {
+          const isAstChange = editor.operations.some(
+            op => 'set_selection' !== op.type
+          )
+          // console.log('isAstChange: ', isAstChange, value)
+          if (isAstChange) {
+            // Save the value to Local Storage.
+            const content = JSON.stringify(value)
+            console.log("value: ", content)
+            setContent(content)
+            // localStorage.setItem('content', content)
+          }
+        }}
+      >
+        <Editable />
+      </Slate>
+    )
+  }
+
+  useEffect(() => {
+    fetchAllNotes()
+    // setUpdating(true)
+    // setTimeout(() => {
+    //   setUpdating(false)
+    // }
+    //   , 3000)
+  }, [])
 
   return (
     <div style={{ flex: 1, margin: 0, display: 'flex', overflow: 'hidden', maxHeight: '100vh' }}>
@@ -198,7 +228,14 @@ const NotesContainer = ({ address }: { address: string }) => {
           {!editMode ?
             <p>{content}</p>
             :
-            <TextBox />
+            // <TextBox updateContent={(e) => setContent(e)} />
+            <ChakraEditable defaultValue={content} onChange={(e) => {
+              setContent(e)
+              console.log(e)
+            }}>
+              <EditablePreview />
+              <EditableInput />
+            </ChakraEditable>
           }
 
         </Container>
@@ -234,26 +271,4 @@ const initialValue = [
   },
 ]
 
-const TextBox = () => {
-  const [editor] = useState(() => withReact(createEditor()))
 
-  return (
-    //@ts-ignore
-    <Slate editor={editor} value={initialValue}
-      onChange={value => {
-        const isAstChange = editor.operations.some(
-          op => 'set_selection' !== op.type
-        )
-        // console.log('isAstChange: ', isAstChange, value)
-        if (isAstChange) {
-          // Save the value to Local Storage.
-          const content = JSON.stringify(value)
-          console.log("value: ", content)
-          // localStorage.setItem('content', content)
-        }
-      }}
-    >
-      <Editable />
-    </Slate>
-  )
-}

@@ -38,6 +38,8 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
     "siwe": "^1.1.6",
+    "slate": "^0.90.0",
+    "slate-react": "^0.90.0",
     "usehooks-ts": "^2.9.1",
     "wagmi": "^0.10.0"
   },

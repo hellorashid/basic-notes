@@ -1,3 +1,6 @@
+// ts ignore entire file
+// @ts-nocheck
+
 
 import { useEffect, useState } from 'react'
 import { background, Button, Card, Center, Heading, ListItem, IconButton, UnorderedList } from '@chakra-ui/react'

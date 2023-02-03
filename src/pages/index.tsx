@@ -195,7 +195,7 @@ const CardItem = ({ title, content }: { title: string, content: string }) => {
           {title}
         </Heading>
 
-        <p>{content}</p>
+        <p >{content}</p>
       </Container>
 
     </Box>
